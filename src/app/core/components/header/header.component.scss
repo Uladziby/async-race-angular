@@ -1,0 +1,80 @@
+mat-toolbar {
+    display: flex;
+    justify-content: space-around;
+  }
+  header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: rgba(255, 255, 255, 0.3);
+    height: 0.3vh;
+  }
+  .logo {
+    border: 3px solid #c2185b;
+    border-radius: 100%;
+    cursor: pointer;
+    height: 50px;
+    width: 50px;
+    line-height: 50px;
+    font-weight: bolder;
+    text-align: center;
+    color: #c2185b;
+  }
+  .mat-form-field + .mat-form-field {
+    margin-left: 8px;
+  }
+  
+  .btn_menu {
+    background-color: transparent;
+  }
+  .mat-expansion-panel-body {
+    display: flex;
+    flex-direction: column;
+    padding: 0px;
+  }
+  
+  .mat-accordion > .mat-expansion-panel-spacing:first-child {
+    margin-top: 70px;
+  }
+  .mat-expansion-panel {
+    background: transparent;
+    & button {
+      color: black;
+    }
+  }
+  .mat-expansion-panel-header-title {
+    display: flex;
+    justify-content: space-around;
+    .name_user {
+      color: black;
+    }
+  }
+  
+  .fixed {
+    padding-top: 1rem;
+    background-color: transparent;
+    transition: all 0.1s;
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4px);
+    box-shadow: rgba(255, 255, 255, 0.3);
+    padding: 25px 0px;
+  }
+  
+  @media (max-width: 600px) {
+    .name_user {
+      display: none;
+    }
+    .panel-body {
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .logo {
+      display: none;
+    }
+    #create-text {
+      display: none;
+    }
+  }
+  
