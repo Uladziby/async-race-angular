@@ -1,12 +1,17 @@
 <header
-  class="mx-auto flex min-h-14 w-4/5 max-w-screen-xl items-center justify-between rounded-md bg-transparent bg-white [box-shadow:rgba(100,_100,_111,_0.2)_0px_7px_29px_0px] lg:px-8 lg:pb-0"
+  class="mx-auto flex min-h-14 items-center justify-between rounded-md bg-transparent bg-white [box-shadow:rgba(100,_100,_111,_0.2)_0px_7px_29px_0px] lg:px-8 lg:pb-0"
 >
   <mat-toolbar layout="row" color="accent" class="flex items-center">
-    <button mat-button (click)="onHome()">
-      <mat-icon>home</mat-icon>
+    <button (click)="onGarage()" class="flex gap-2">
+      <lucide-icon name="home" class="my-icon"></lucide-icon>
+      <span>Garage</span>
     </button>
-    <button mat-button (click)="openDialog()">
-      <mat-icon>person</mat-icon>
+    <button (click)="onWinners()" class="flex gap-2">
+      <lucide-icon name="trophy" class="my-icon"></lucide-icon>
+      <span>Winners</span>
+    </button>
+    <button class="flex gap-2" (click)="openDialog()">
+      <lucide-icon name="user" class="my-icon"></lucide-icon>
       <span id="create-text"> About Me </span>
     </button>
   </mat-toolbar>

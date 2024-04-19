@@ -1,11 +1,11 @@
-import { NgModule } from '@angular/core';
+import { ButtonComponent } from './components/button/button.component';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from 'src/app/core/components/header/header.component';
 import { FooterComponent } from 'src/app/core/components/footer/footer.component';
 import {
   MatToolbarModule,
   MatButtonModule,
-  MatCardModule,
   MatInputModule,
   MatSlideToggleModule,
   MatIconModule,
@@ -13,6 +13,16 @@ import {
   MatProgressSpinnerModule,
   MatProgressBarModule,
 } from '@angular/material';
+import {
+  LucideAngularModule,
+  File,
+  Home,
+  Menu,
+  UserCheck,
+  Trophy,
+  User,
+  Car,
+} from 'lucide-angular';
 
 const materialModules = [
   MatToolbarModule,
@@ -27,8 +37,26 @@ const materialModules = [
 ];
 
 @NgModule({
-  declarations: [HeaderComponent, FooterComponent],
-  imports: [CommonModule, ...materialModules],
-  exports: [HeaderComponent, FooterComponent],
+  declarations: [HeaderComponent, FooterComponent, ButtonComponent],
+  imports: [
+    CommonModule,
+    ...materialModules,
+    LucideAngularModule.pick({
+      File,
+      Home,
+      Menu,
+      UserCheck,
+      Trophy,
+      User,
+      Car,
+    }),
+  ],
+  exports: [
+    HeaderComponent,
+    FooterComponent,
+    ButtonComponent,
+    ...materialModules,
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CoreModule {}

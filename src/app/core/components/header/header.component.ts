@@ -1,3 +1,4 @@
+import { RouteEnum } from 'src/app/shared/interfaces/enums';
 import { Router } from '@angular/router';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,7 +13,10 @@ export class HeaderComponent {
 
   openDialog() {}
 
-  onHome() {
-    this.router.navigate(['']);
+  onGarage() {
+    this.router.navigate([RouteEnum.garage]);
+  }
+  onWinners() {
+    this.router.navigate([RouteEnum.winners]);
   }
 }
