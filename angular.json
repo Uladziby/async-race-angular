@@ -68,10 +68,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "async-race-angular:build:production"
+              "buildTarget": "async-race-angular:build:production"
             },
             "development": {
-              "browserTarget": "async-race-angular:build:development"
+              "buildTarget": "async-race-angular:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -79,7 +79,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "async-race-angular:build"
+            "buildTarget": "async-race-angular:build"
           }
         },
         "test": {

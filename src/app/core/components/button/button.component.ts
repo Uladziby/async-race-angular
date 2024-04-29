@@ -16,6 +16,7 @@ export class ButtonComponent {
       this._disabled = true;
     }
   }
+
   public get disabled(): string {
     return this._disabled ? 'true' : '';
   }

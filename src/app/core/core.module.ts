@@ -1,18 +1,8 @@
 import { ButtonComponent } from './components/button/button.component';
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from 'src/app/core/components/header/header.component';
 import { FooterComponent } from 'src/app/core/components/footer/footer.component';
-import {
-  MatToolbarModule,
-  MatButtonModule,
-  MatInputModule,
-  MatSlideToggleModule,
-  MatIconModule,
-  MatDialogModule,
-  MatProgressSpinnerModule,
-  MatProgressBarModule,
-} from '@angular/material';
 import {
   LucideAngularModule,
   File,
@@ -23,24 +13,13 @@ import {
   User,
   Car,
 } from 'lucide-angular';
-
-const materialModules = [
-  MatToolbarModule,
-  MatButtonModule,
-  MatCardModule,
-  MatInputModule,
-  MatSlideToggleModule,
-  MatIconModule,
-  MatDialogModule,
-  MatProgressSpinnerModule,
-  MatProgressBarModule,
-];
+import { MaterialModule } from 'src/app/material/material.module';
 
 @NgModule({
   declarations: [HeaderComponent, FooterComponent, ButtonComponent],
   imports: [
     CommonModule,
-    ...materialModules,
+    MaterialModule,
     LucideAngularModule.pick({
       File,
       Home,
@@ -55,8 +34,8 @@ const materialModules = [
     HeaderComponent,
     FooterComponent,
     ButtonComponent,
-    ...materialModules,
+    MaterialModule,
+    LucideAngularModule,
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CoreModule {}
