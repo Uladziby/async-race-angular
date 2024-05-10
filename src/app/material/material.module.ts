@@ -32,6 +32,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatStepperModule } from '@angular/material/stepper';
+import { ColorPickerModule } from 'ngx-color-picker';
 const MATERIAL_MODULES = [
   MatAutocompleteModule,
   MatButtonModule,
@@ -67,6 +68,7 @@ const MATERIAL_MODULES = [
   A11yModule,
   MatCommonModule,
   ObserversModule,
+  ColorPickerModule,
 ];
 
 @NgModule({

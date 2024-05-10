@@ -1,21 +1,56 @@
-<div class="flex justify-between">
-  <div class="w-1/6 flex">
-    <app-button color="secondary" type="flat" size="large">Race</app-button>
-    <app-button color="secondary" type="flat" size="large"> Reset </app-button>
-  </div>
-  <div class="w-1/6 flex">
-    <input type="text" class="w-1/2" placeholder="Enter car name" />
-    <app-button color="secondary" type="flat" size="large"> COLOR </app-button>
-    <app-button color="secondary" type="flat" size="large"> Create </app-button>
-  </div>
-  <div class="w-1/6 flex">
-    <input type="text" class="w-1/2" placeholder="Enter car name" />
-    <app-button color="secondary" type="flat" size="large"> COLOR </app-button>
-    <app-button color="secondary" type="flat" size="large"> Update </app-button>
-  </div>
-  <div class="w-1/6 flex">
-    <app-button color="secondary" type="flat" size="large">
-      Generate cars
+<div class="flex justify-between p-4">
+  <div class="w-1/6 flex items-center gap-4">
+    <app-material-button
+      color="primary"
+      type="flat"
+      size="large"
+      (click)="onRace()"
+    >
+      <div class="flex items-center gap-4">
+        <span>Race</span>
+        <lucide-icon name="play" size="22" color="black"></lucide-icon>
+      </div>
+    </app-material-button>
+    <app-button (click)="onReset()">
+      <div class="flex items-center gap-4">
+        <span>Restart</span>
+        <lucide-icon name="rotate-ccw" size="22" color="black"></lucide-icon>
+      </div>
     </app-button>
+  </div>
+  <div class="flex items-center gap-2 border-x-4 border-indigo-500 px-4">
+    <input
+      type="text"
+      class="w-1/2"
+      placeholder="Type a car name"
+      [formControl]="name"
+    />
+    <input
+      [(colorPicker)]="color"
+      [style.background]="color"
+      class="w-8 rounded-2xl"
+    />
+    <app-button (click)="onCreateCar()" class="whitespace-nowrap">
+      Add a new car
+    </app-button>
+  </div>
+  <div class="flex items-center gap-2 border-x-4 border-indigo-500 px-4">
+    <input
+      type="text"
+      class="w-1/2"
+      placeholder="Type a car name"
+      [formControl]="updateName"
+    />
+    <input
+      [(colorPicker)]="updateColor"
+      [style.background]="updateColor"
+      class="w-8 rounded-2xl"
+    />
+    <app-button (click)="onUpdateCar()"> Update </app-button>
+  </div>
+  <div class="flex items-center gap-2 border-x-4 border-indigo-500 px-4">
+    <app-material-button color="secondary" type="flat" size="large">
+      Generate cars
+    </app-material-button>
   </div>
 </div>

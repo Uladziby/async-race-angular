@@ -1,6 +1,8 @@
+import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from './shared/shared.module';
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import appConfig from 'src/app/app.config';
 import { CoreModule } from 'src/app/core/core.module';
 import { GarageModule } from 'src/app/garage/garage.module';
 import { MaterialModule } from 'src/app/material/material.module';
@@ -10,12 +12,14 @@ import { MaterialModule } from 'src/app/material/material.module';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   standalone: true,
+  providers: [{ provide: 'AppConfig', useValue: appConfig }],
   imports: [
     RouterOutlet,
     MaterialModule,
     CoreModule,
     GarageModule,
     SharedModule,
+    HttpClientModule,
   ],
 })
 export class AppComponent {

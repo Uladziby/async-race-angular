@@ -1,5 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { StateService } from 'src/app/core/services/api/state.service';
+import {
+  Car,
+  ResponseSwitchDriveMode,
+  StartEngineResponse,
+} from 'src/app/shared/interfaces/types';
 
 @Injectable({
   providedIn: 'root',
@@ -11,46 +18,56 @@ export class ApiService {
 
   private engine = `${this.base}/engine`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private state: StateService) {}
 
-  public async getCars(page: number) {
-    const res = await fetch(`${this.garage}?_page${page}`);
-    const arrOut = await res.json();
-    return arrOut;
+  getCars(page?: number): Observable<Car[]> {
+    return this.http.get<Car[]>(`${this.garage}?_page${page}`);
   }
 
-  public async getCar(id: number) {
-    const res = await fetch(`${this.garage}/${id}`);
-    return res.json();
+  getCar(id: number): Observable<Car> {
+    return this.http.get<Car>(`${this.garage}/${id}`);
   }
 
-  public async createCar() {
-    /*    const body = await new RandomCar().createRandomCar();
-    console.log('body', body);
-    const req = (
-      await fetch(this.garage, {
-        method: 'POST',
-        body: JSON.stringify(body),
-        headers: { 'Content-Type': 'application/json' },
-      })
-    ).json(); */
+  createCar(data: Omit<Car, 'id'>): Observable<Car> {
+    return this.http.post<Car>(
+      this.garage,
+      { name: data.name, color: data.color },
+      { headers: { 'Content-Type': 'application/json' } }
+    );
   }
 
-  public async deleteCar(id: number) {
-    console.log('delete', id);
-    const req = (
-      await fetch(`${this.garage}/${id}`, {
-        method: 'DELETE',
-      })
-    ).json();
+  updateCar(data: Car, numberPage: number): Observable<Car> {
+    const response = this.http.put<Car>(
+      `${this.garage}/${data.id}`,
+      { name: data.name, color: data.color, id: data.id },
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+
+    return response;
   }
 
-  public async startEngine(id: number) {
-    const res = await fetch(`${this.engine}?id=${id}&status=started`);
-    return res.json();
+  deleteCar(id: number): Observable<{}> {
+    return this.http.delete<{}>(`${this.garage}/${id}`);
   }
 
-  public async stopEngine(id: number) {
-    return (await fetch(`${this.engine}?id=${id}&status=stopped`)).json();
+  startEngine(id: number) {
+    return this.http.patch<StartEngineResponse>(
+      `${this.engine}?id=${id}&status=started`,
+      {}
+    );
+  }
+
+  stopEngine(id: number) {
+    return this.http.patch(`${this.engine}?id=${id}&status=stopped`, {});
+  }
+
+  switchDriveMode(
+    id: number,
+    status: string
+  ): Observable<ResponseSwitchDriveMode> {
+    return this.http.patch<ResponseSwitchDriveMode>(
+      `${this.engine}?id=${id}&status=${status}`,
+      {}
+    );
   }
 }

@@ -1,10 +1,12 @@
 import { AfterViewInit, Directive, ElementRef, Input } from '@angular/core';
+import { getSpeed } from 'src/app/shared/constants';
 
 @Directive({
   selector: '[appRaceDirective]',
   standalone: true,
 })
 export class RaceDirective implements AfterViewInit {
+  @Input() velocity: number | undefined;
   @Input() raceField: HTMLDivElement | undefined;
   @Input() speed: number = 1000; // 1000ms (1s)
 
@@ -17,10 +19,9 @@ export class RaceDirective implements AfterViewInit {
         this.elementRef.nativeElement.offsetWidth * 2;
 
       this.elementRef.nativeElement.style.transform = `translateX(${roadDistance})`;
-
-      this.elementRef.nativeElement.style.transitionDuration = `${
-        this.speed / 1000
-      }s`;
+      this.elementRef.nativeElement.style.transitionDuration = `${getSpeed(
+        this.velocity || 10 // Provide a default value for velocity
+      )}s`;
     }
   }
 }

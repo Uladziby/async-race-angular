@@ -1,4 +1,12 @@
 <div class="w-full flex flex-col">
-  <app-control-panel></app-control-panel>
-  <app-garage-car></app-garage-car>
+  <app-control-panel [carsList$]="carsList$"></app-control-panel>
+  <ul class="flex flex-col gap-10 border-b-4 border-indigo-500">
+    <li>
+      <app-garage-car
+        (removedCarId)="onRemoveCar($event)"
+        *ngFor="let car of carsList$ | async"
+        [car]="car"
+      ></app-garage-car>
+    </li>
+  </ul>
 </div>

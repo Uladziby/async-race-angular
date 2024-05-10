@@ -1,3 +1,10 @@
-<button mat-button class="button" [ngClass]="buttonTypeClasses">
-  <ng-content></ng-content>
-</button>
+<div id="button">
+  <button
+    type="button"
+    class="button"
+    (click)="onClickButton($event)"
+    [ngClass]="buttonTypeClasses"
+  >
+    <ng-content></ng-content>
+  </button>
+</div>

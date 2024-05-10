@@ -1,18 +1,19 @@
 <header
-  class="mx-auto flex min-h-14 items-center justify-between rounded-md bg-transparent bg-white [box-shadow:rgba(100,_100,_111,_0.2)_0px_7px_29px_0px] lg:px-8 lg:pb-0"
+  class="flex min-h-14 items-center justify-center gap-10 rounded-md bg-transparent [box-shadow:rgba(100,_100,_111,_0.2)_0px_7px_29px_0px] lg:px-8 lg:pb-0"
 >
-  <mat-toolbar layout="row" color="accent" class="flex items-center">
-    <button (click)="onGarage()" class="flex gap-2">
-      <lucide-icon name="home" class="my-icon"></lucide-icon>
-      <span>Garage</span>
-    </button>
-    <button (click)="onWinners()" class="flex gap-2">
-      <lucide-icon name="trophy" class="my-icon"></lucide-icon>
-      <span>Winners</span>
-    </button>
-    <button class="flex gap-2" (click)="openDialog()">
-      <lucide-icon name="user" class="my-icon"></lucide-icon>
-      <span id="create-text"> About Me </span>
-    </button>
-  </mat-toolbar>
+  <a
+    (click)="onGarage()"
+    class="link flex gap-2 border-x-indigo-500 h-full items-center p-2 cursor-pointer"
+  >
+    <lucide-icon name="home" class="my-icon"></lucide-icon>
+    <span>Garage</span>
+  </a>
+  <button (click)="onWinners()" class="flex gap-2">
+    <lucide-icon name="trophy" class="my-icon"></lucide-icon>
+    <span>Winners</span>
+  </button>
+  <button class="flex gap-2" (click)="openDialog()">
+    <lucide-icon name="user" class="my-icon"></lucide-icon>
+    <span id="create-text">About Me</span>
+  </button>
 </header>

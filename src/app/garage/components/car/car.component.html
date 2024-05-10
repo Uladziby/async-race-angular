@@ -1,12 +1,28 @@
 <div class="flex">
-  <div class="w-1/12">
-    <div class="flex flex-col">
-      <app-button color="secondary" type="flat" size="large" (click)="onStart()"
-        >Start</app-button
-      >
-      <app-button color="secondary" type="flat" size="large" click="onStop()"
-        >Stop</app-button
-      >
+  <div class="w-2/12 border-t-4 border-indigo-500">
+    <div class="flex px-2 justify-center">
+      <div class="justify-start items-center flex flex-1 gap-4">
+        <app-button (click)="onRemoveCar()"
+          ><lucide-icon name="square-x"></lucide-icon
+        ></app-button>
+        <span>{{ car.name }}</span>
+      </div>
+      <div class="flex flex-col justify-center items-center flex-1">
+        <app-material-button
+          color="secondary"
+          type="flat"
+          size="large"
+          (click)="onStartEngine()"
+          ><lucide-icon name="play"></lucide-icon
+        ></app-material-button>
+        <app-material-button
+          color="secondary"
+          type="flat"
+          size="large"
+          (click)="onStopEngine()"
+          ><lucide-icon name="pause"></lucide-icon
+        ></app-material-button>
+      </div>
     </div>
   </div>
   <div class="w-11/12">
@@ -17,9 +33,15 @@
         class="absolute ease-in"
         [style.left]="left"
         [raceField]="containerRaceField"
+        [velocity]="velocity"
       >
-        <lucide-icon name="car" size="64" color="orange"></lucide-icon>
+        <lucide-icon name="car" size="64" color="{{ car.color }}"></lucide-icon>
       </div>
     </div>
   </div>
 </div>
+<pre>
+  {{ velocity }}
+  {{ car.id }}
+  {{ left }}
+</pre>
