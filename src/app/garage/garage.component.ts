@@ -35,4 +35,8 @@ export class GarageComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subsApiService.unsubscribe();
   }
+
+  onChangePage(page: number) {
+    console.log(page);
+  }
 }

@@ -14,7 +14,9 @@ export class HeaderComponent {
   openDialog() {}
 
   onGarage() {
-    this.router.navigate([RouteEnum.garage]);
+    this.router.navigate([RouteEnum.garage], {
+      queryParams: { page: 1 },
+    });
   }
   onWinners() {
     this.router.navigate([RouteEnum.winners]);

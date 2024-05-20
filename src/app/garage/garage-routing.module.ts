@@ -4,13 +4,17 @@ import { GarageComponent } from 'src/app/garage/garage.component';
 
 const routes: Routes = [
   {
-    path: ':pageNumber',
+    path: '',
     component: GarageComponent,
   },
+  /*  {
+    path:'?page=1',
+    component: GarageComponent,
+  }, */
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
 export class GarageRoutingModule {}

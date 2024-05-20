@@ -9,4 +9,8 @@
       ></app-garage-car>
     </li>
   </ul>
+  <app-pagination
+    [totalItems]="carsList$.value.length"
+    (pageChanged)="onChangePage($event)"
+  ></app-pagination>
 </div>

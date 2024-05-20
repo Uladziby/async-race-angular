@@ -9,10 +9,9 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { BehaviorSubject, Subscription, filter } from 'rxjs';
+import { BehaviorSubject, Subscription, filter, map } from 'rxjs';
 import { ApiService } from 'src/app/core/services/api/api.service';
 import { StateService } from 'src/app/core/services/api/state.service';
-import { StartEngineResponse } from 'src/app/shared/interfaces/types';
 
 @Component({
   selector: 'app-garage-car',
@@ -42,23 +41,32 @@ export class CarComponent implements OnInit {
 
   @Output() removedCarId = new EventEmitter<number>();
 
+  carsVelocity: CarsVelocityType[] = [];
+
+  subscription: Subscription;
+
   constructor(
     private apiService: ApiService,
     private stateService: StateService
-  ) {}
+  ) {
+    //console.log(this.car.id, 'thiscarid');
+    this.subscription = this.stateService.currentCarsVelocity$.subscribe(
+      (data) => {
+        this.carsVelocity = data;
+        console.log('velocity', this.carsVelocity, !data);
+        /*  data.find((item) => item.id === this.car.id)?.velocity ?? 1;
+        this.onDriveMode(); */
+      }
+    );
+    /*   .pipe(
+        map((carsVelocity) =>
+          carsVelocity.find((item) => item.id === this.car.id)
+        )
+      ) */
+  }
 
   ngOnInit() {
-    this.stateService.currentCarsVelocity.subscribe((data) => {
-      console.log('data', data.length);
-      if (data.length === 0) return;
-
-      const carsVelocity = data.find((item) => item.id === this.car.id);
-
-      this.velocity = carsVelocity!.velocity;
-
-      this.onDriveMode();
-    });
-
+    // this.onDriveMode();
     this.roadDistance =
       this.containerRaceField!.nativeElement.clientWidth -
       this.containerCar!.nativeElement.clientWidth * 2;
@@ -75,16 +83,9 @@ export class CarComponent implements OnInit {
   }
 
   onStartEngine() {
+    console.log(this.carsVelocity, 'cars velocity');
     if (!this.containerRaceField) return;
-    console.log('onStartEngine', this.carVelocity);
     this.onDriveMode();
-    /*   */
-
-    /* this.apiService
-      .startEngine(this.car.id)
-      .subscribe((data: StartEngineResponse) => {
-        this.velocity = data.velocity;
-      }); */
   }
 
   onStopEngine(event?: MouseEvent) {
@@ -96,30 +97,31 @@ export class CarComponent implements OnInit {
   }
 
   onRemoveCar() {
-    //TODO: remove car
-    console.log('remove car');
     this.removedCarId.emit(this.car.id);
   }
 
-  /*   onCreateCar() {
-    this.apiService
-      .createCar({ name: this.name.value, color: this.color })
-      .subscribe(() => {
-        this.apiService.getCars(this.numberPage).subscribe((cars) => {
-          this.carsList$.next(cars);
-        });
-      });
-  } */
-
   onDriveMode() {
-    const id = this.car.id;
     console.log('onDriveMode');
 
-    this.stateService.currentCarsVelocity
-      .pipe(filter((data) => data[id].id === this.car.id))
+    const id = this.car.id;
+
+    console.log(id, 'id');
+    this.stateService.currentCarsVelocity$.subscribe((data) => {
+      console.log(data, 'sdas');
+    });
+
+    this.stateService.currentCarsVelocity$
+      .pipe(
+        map((carsVelocity) => {
+          console.log(carsVelocity, 'carsVelocity'),
+            carsVelocity.filter((item) => item.id === id);
+        })
+      )
       .subscribe((data) => {
-        this.carVelocity = data[0].velocity;
-        console.log('this.carVelocity', this.carVelocity);
+        console.log(data, 'data state service');
+        /*     if (data) {
+          this.carVelocity = data.velocity;
+        } */
       });
 
     this.apiService.switchDriveMode(this.car.id, 'drive').subscribe((data) => {
@@ -127,18 +129,17 @@ export class CarComponent implements OnInit {
         this.containerRaceField!.nativeElement.clientWidth -
         this.containerCar!.nativeElement.clientWidth * 2;
 
+      console.log('onDriveMode', data);
       if (data.success) {
         console.log('drive mode');
         setTimeout(() => {
           this.left = `${this.roadDistance}px`;
-          console.log(
-            'this.roadDistance',
-            this.roadDistance,
-            this.left,
-            this.carVelocity
-          );
         }, 1000);
       }
     });
+  }
+
+  ngOnDestroy() {
+    /*  this.subscription.unsubscribe(); */
   }
 }

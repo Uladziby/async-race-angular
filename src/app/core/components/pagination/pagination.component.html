@@ -1,0 +1,24 @@
+<div class="flex justify-center mt-4">
+  <button
+    (click)="onPageChange(currentPage - 1)"
+    [disabled]="currentPage === 1"
+    class="mx-2 px-3 py-1 bg-gray-200 text-gray-600 rounded disabled:opacity-50"
+  >
+    Previous
+  </button>
+  <button
+    *ngFor="let page of pages; let i = index"
+    (click)="onPageChange(i + 1)"
+    [class.bg-gray-300]="currentPage === i + 1"
+    class="mx-2 px-3 py-1 bg-gray-200 text-gray-600 rounded"
+  >
+    {{ i + 1 }}
+  </button>
+  <button
+    (click)="onPageChange(currentPage + 1)"
+    [disabled]="currentPage === totalPages"
+    class="mx-2 px-3 py-1 bg-gray-200 text-gray-600 rounded disabled:opacity-50"
+  >
+    Next
+  </button>
+</div>

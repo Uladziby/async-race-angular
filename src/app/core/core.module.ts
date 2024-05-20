@@ -23,6 +23,7 @@ import { MaterialModule } from 'src/app/material/material.module';
 import { ButtonComponent } from 'src/app/core/components/button/button.component';
 import { ApiService } from 'src/app/core/services/api/api.service';
 import { StateService } from 'src/app/core/services/api/state.service';
+import { PaginationComponent } from 'src/app/core/components/pagination/pagination.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { StateService } from 'src/app/core/services/api/state.service';
   imports: [
     CommonModule,
     MaterialModule,
+    PaginationComponent,
     LucideAngularModule.pick({
       File,
       Home,
@@ -58,6 +60,7 @@ import { StateService } from 'src/app/core/services/api/state.service';
     MaterialButtonComponent,
     MaterialModule,
     LucideAngularModule,
+    PaginationComponent,
   ],
 })
 export class CoreModule {}

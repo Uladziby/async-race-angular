@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 
 import {
   Car,
@@ -11,12 +11,12 @@ import {
   providedIn: 'root',
 })
 export class StateService {
-  private carsVelocity = new BehaviorSubject<CarsVelocityType[]>([]);
+  private carsVelocity = new ReplaySubject<CarsVelocityType[]>();
   private garage = new BehaviorSubject<Car[]>([]);
 
-  currentCarsVelocity = this.carsVelocity.asObservable();
+  currentCarsVelocity$ = this.carsVelocity.asObservable();
 
-  currentGarage = this.garage.asObservable();
+  currentGarage$ = this.garage.asObservable();
 
   garagePage: IGaragePage = {
     page: 1,
@@ -26,7 +26,7 @@ export class StateService {
   };
 
   getCars() {
-    return this.currentGarage;
+    return this.currentGarage$;
   }
 
   addCar(car: Car) {
@@ -35,12 +35,10 @@ export class StateService {
 
   setCars(cars: Car[]) {
     this.garage.next(cars);
-    console.log('setCars', this.garage.getValue());
   }
 
   getCarsVelocity() {
-    console.log('subject', this.carsVelocity.value);
-    return this.currentCarsVelocity;
+    return this.currentCarsVelocity$;
   }
 
   setCarsVelocity(carsVelocity: CarsVelocityType[]) {

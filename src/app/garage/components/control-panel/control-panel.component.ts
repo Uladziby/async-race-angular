@@ -2,7 +2,7 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CoreModule } from 'src/app/core/core.module';
 import { ApiService } from 'src/app/core/services/api/api.service';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable, filter, map } from 'rxjs';
 import {
   Car,
@@ -11,6 +11,7 @@ import {
 } from 'src/app/shared/interfaces/types';
 import { StateService } from 'src/app/core/services/api/state.service';
 import { CarComponent } from 'src/app/garage/components/car/car.component';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-control-panel',
@@ -35,17 +36,16 @@ export class ControlPanelComponent implements OnInit, OnDestroy {
   constructor(
     private apiService: ApiService,
     private stateService: StateService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
   onReset(event?: MouseEvent) {}
 
   ngOnInit() {
-    this.route.params.subscribe((params) => {
-      const numberPage = params['id'];
-      console.log('numberPage', numberPage);
-
-      if (numberPage) {
-      }
+    this.route.queryParamMap.subscribe((params) => {
+      const numberPage = params.get('page');
+      if (numberPage) this.numberPage = parseInt(numberPage);
+      this.router.navigate(['/garage'], { queryParams: { page: '1' } });
     });
   }
 
