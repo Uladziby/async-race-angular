@@ -21,6 +21,8 @@ import { StateService } from 'src/app/core/services/api/state.service';
 export class CarComponent implements OnInit {
   left = '10px';
 
+  isEngineStarted: string = 'secondary';
+
   velocity: number = 0;
 
   roadDistance: number = 0;
@@ -49,7 +51,6 @@ export class CarComponent implements OnInit {
     private apiService: ApiService,
     private stateService: StateService
   ) {
-    //console.log(this.car.id, 'thiscarid');
     this.subscription = this.stateService.currentCarsVelocity$.subscribe(
       (data) => {
         this.carsVelocity = data;
@@ -58,11 +59,6 @@ export class CarComponent implements OnInit {
         this.onDriveMode(); */
       }
     );
-    /*   .pipe(
-        map((carsVelocity) =>
-          carsVelocity.find((item) => item.id === this.car.id)
-        )
-      ) */
   }
 
   ngOnInit() {
@@ -83,9 +79,11 @@ export class CarComponent implements OnInit {
   }
 
   onStartEngine() {
-    console.log(this.carsVelocity, 'cars velocity');
+    console.log('onStartEngine', this.car.id);
     if (!this.containerRaceField) return;
-    this.onDriveMode();
+    this.apiService.startEngine(this.car.id).subscribe(() => {
+      this.isEngineStarted = 'primary';
+    });
   }
 
   onStopEngine(event?: MouseEvent) {
@@ -93,6 +91,7 @@ export class CarComponent implements OnInit {
       const car = this.containerCar!.nativeElement;
       car.style.left = '10px';
       car.style.transitionDuration = '0s';
+      this.isEngineStarted = 'secondary';
     });
   }
 
@@ -124,7 +123,7 @@ export class CarComponent implements OnInit {
         } */
       });
 
-    this.apiService.switchDriveMode(this.car.id, 'drive').subscribe((data) => {
+    this.apiService.switchDriveMode(this.car.id).subscribe((data) => {
       this.roadDistance =
         this.containerRaceField!.nativeElement.clientWidth -
         this.containerCar!.nativeElement.clientWidth * 2;

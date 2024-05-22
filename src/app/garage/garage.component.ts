@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { ApiService } from 'src/app/core/services/api/api.service';
 import { StateService } from 'src/app/core/services/api/state.service';
+import { CarComponent } from 'src/app/garage/components/car/car.component';
 import { Car, CarsVelocityType } from 'src/app/shared/interfaces/types';
 
 @Component({
@@ -10,7 +11,10 @@ import { Car, CarsVelocityType } from 'src/app/shared/interfaces/types';
   styleUrl: './garage.component.scss',
 })
 export class GarageComponent implements OnInit, OnDestroy {
+  @ViewChild(CarComponent) child!: CarComponent;
+
   private subsApiService!: Subscription;
+
   carsList$ = new BehaviorSubject<Car[]>([]);
 
   constructor(
@@ -38,5 +42,10 @@ export class GarageComponent implements OnInit, OnDestroy {
 
   onChangePage(page: number) {
     console.log(page);
+  }
+
+  onStartEngines(data: { success: boolean; id: number }) {
+    console.log('onStartEngines garage component', data);
+    this.child.onStartEngine();
   }
 }

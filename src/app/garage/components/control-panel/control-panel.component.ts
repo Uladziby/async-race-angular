@@ -1,4 +1,11 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { CoreModule } from 'src/app/core/core.module';
 import { ApiService } from 'src/app/core/services/api/api.service';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -32,6 +39,9 @@ export class ControlPanelComponent implements OnInit, OnDestroy {
   updateName = new FormControl('', { nonNullable: true });
 
   @Input() carsList$!: BehaviorSubject<Car[]>;
+
+  @Output() onStartEngines: EventEmitter<{ success: boolean; id: number }> =
+    new EventEmitter<{ success: boolean; id: number }>();
 
   constructor(
     private apiService: ApiService,
@@ -86,14 +96,21 @@ export class ControlPanelComponent implements OnInit, OnDestroy {
 
   onRace() {
     console.log('onRace');
+
     const carsVelocity: CarsVelocityType[] = [];
+
     this.carsList$.subscribe((cars) => {
       Promise.all(
         cars.map((car) =>
           this.apiService.startEngine(car.id).subscribe((data) => {
+            console.log('startEngine', car.id);
             carsVelocity.push({
               id: car.id,
               velocity: data.velocity,
+            });
+            this.apiService.switchDriveMode(car.id).subscribe((data) => {
+              console.log('switchDriveMode', data);
+              this.onStartEngines.emit({ ...data, id: car.id });
             });
           })
         )

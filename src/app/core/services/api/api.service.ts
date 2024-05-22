@@ -61,12 +61,9 @@ export class ApiService {
     return this.http.patch(`${this.engine}?id=${id}&status=stopped`, {});
   }
 
-  switchDriveMode(
-    id: number,
-    status: string
-  ): Observable<ResponseSwitchDriveMode> {
+  switchDriveMode(id: number): Observable<ResponseSwitchDriveMode> {
     return this.http.patch<ResponseSwitchDriveMode>(
-      `${this.engine}?id=${id}&status=${status}`,
+      `${this.engine}?id=${id}&status=drive`,
       {}
     );
   }

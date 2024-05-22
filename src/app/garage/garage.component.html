@@ -1,5 +1,8 @@
 <div class="w-full flex flex-col">
-  <app-control-panel [carsList$]="carsList$"></app-control-panel>
+  <app-control-panel
+    [carsList$]="carsList$"
+    (onStartEngines)="onStartEngines($event)"
+  ></app-control-panel>
   <ul class="flex flex-col gap-10 border-b-4 border-indigo-500">
     <li>
       <app-garage-car

@@ -10,6 +10,7 @@ import {
 @Injectable({
   providedIn: 'root',
 })
+//добавить обьект после запуска драйв мода
 export class StateService {
   private carsVelocity = new ReplaySubject<CarsVelocityType[]>();
   private garage = new BehaviorSubject<Car[]>([]);
