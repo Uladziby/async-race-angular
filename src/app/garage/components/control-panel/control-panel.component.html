@@ -49,7 +49,12 @@
     <app-button (click)="onUpdateCar()"> Update </app-button>
   </div>
   <div class="flex items-center gap-2 border-x-4 border-indigo-500 px-4">
-    <app-material-button color="secondary" type="flat" size="large">
+    <app-material-button
+      color="secondary"
+      type="flat"
+      size="large"
+      (click)="onGenerateCars()"
+    >
       Generate cars
     </app-material-button>
   </div>

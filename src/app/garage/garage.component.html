@@ -3,17 +3,19 @@
     [carsList$]="carsList$"
     (onStartEngines)="onStartEngines($event)"
   ></app-control-panel>
-  <ul class="flex flex-col gap-10 border-b-4 border-indigo-500">
-    <li>
-      <app-garage-car
-        (removedCarId)="onRemoveCar($event)"
-        *ngFor="let car of carsList$ | async"
-        [car]="car"
-      ></app-garage-car>
-    </li>
-  </ul>
+  <ng-container *ngIf="carsList$ | async">
+    <ul class="flex flex-col gap-10 border-b-4 border-indigo-500">
+      <li>
+        <app-garage-car
+          (removedCarId)="onRemoveCar($event)"
+          *ngFor="let car of pageOfItems"
+          [car]="car"
+        ></app-garage-car>
+      </li>
+    </ul>
+  </ng-container>
   <app-pagination
-    [totalItems]="carsList$.value.length"
-    (pageChanged)="onChangePage($event)"
+    [items]="carsList$.value"
+    (changePage)="onChangePage($event)"
   ></app-pagination>
 </div>

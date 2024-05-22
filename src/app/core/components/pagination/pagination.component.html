@@ -1,22 +1,22 @@
 <div class="flex justify-center mt-4">
   <button
-    (click)="onPageChange(currentPage - 1)"
+    (click)="setPage(currentPage - 1)"
     [disabled]="currentPage === 1"
     class="mx-2 px-3 py-1 bg-gray-200 text-gray-600 rounded disabled:opacity-50"
   >
     Previous
   </button>
   <button
-    *ngFor="let page of pages; let i = index"
-    (click)="onPageChange(i + 1)"
-    [class.bg-gray-300]="currentPage === i + 1"
+    *ngFor="let page of visiblePages"
+    (click)="setPage(page)"
+    [class.bg-gray-300]="currentPage === page"
     class="mx-2 px-3 py-1 bg-gray-200 text-gray-600 rounded"
   >
-    {{ i + 1 }}
+    {{ page }}
   </button>
   <button
-    (click)="onPageChange(currentPage + 1)"
-    [disabled]="currentPage === totalPages"
+    (click)="setPage(currentPage + 1)"
+    [disabled]="currentPage === pager.totalPages"
     class="mx-2 px-3 py-1 bg-gray-200 text-gray-600 rounded disabled:opacity-50"
   >
     Next

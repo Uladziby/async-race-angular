@@ -17,6 +17,8 @@ export class GarageComponent implements OnInit, OnDestroy {
 
   carsList$ = new BehaviorSubject<Car[]>([]);
 
+  pageOfItems: Car[] = [];
+
   constructor(
     private apiService: ApiService,
     private stateService: StateService
@@ -40,8 +42,8 @@ export class GarageComponent implements OnInit, OnDestroy {
     this.subsApiService.unsubscribe();
   }
 
-  onChangePage(page: number) {
-    console.log(page);
+  onChangePage(items: Car[]) {
+    this.pageOfItems = items;
   }
 
   onStartEngines(data: { success: boolean; id: number }) {

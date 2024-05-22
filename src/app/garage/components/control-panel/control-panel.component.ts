@@ -10,15 +10,10 @@ import { CoreModule } from 'src/app/core/core.module';
 import { ApiService } from 'src/app/core/services/api/api.service';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Observable, filter, map } from 'rxjs';
-import {
-  Car,
-  CarsVelocityType,
-  StartEngineResponse,
-} from 'src/app/shared/interfaces/types';
+import { BehaviorSubject, map } from 'rxjs';
+import { Car, CarsVelocityType } from 'src/app/shared/interfaces/types';
 import { StateService } from 'src/app/core/services/api/state.service';
-import { CarComponent } from 'src/app/garage/components/car/car.component';
-import { HttpParams } from '@angular/common/http';
+import { getRandomColor, getRandomName } from 'src/app/core/models/cars';
 
 @Component({
   selector: 'app-control-panel',
@@ -123,5 +118,17 @@ export class ControlPanelComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.carsList$.unsubscribe();
+  }
+
+  onGenerateCars() {
+    for (let i = 0; i < 100; i++) {
+      this.apiService
+        .createCar({ name: getRandomName(), color: getRandomColor() })
+        .subscribe(() => {
+          this.apiService.getCars(this.numberPage).subscribe((cars) => {
+            this.carsList$.next(cars);
+          });
+        });
+    }
   }
 }
