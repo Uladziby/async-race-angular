@@ -18,12 +18,13 @@ import {
   SquarePower,
   SquareX,
   Pause,
+  Crown,
 } from 'lucide-angular';
 import { MaterialModule } from 'src/app/material/material.module';
 import { ButtonComponent } from 'src/app/core/components/button/button.component';
-import { ApiService } from 'src/app/core/services/api/api.service';
-import { StateService } from 'src/app/core/services/api/state.service';
+
 import { PaginationComponent } from 'src/app/core/components/pagination/pagination.component';
+import { DialogAboutComponent } from 'src/app/core/components/dialog-about/dialog-about.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { PaginationComponent } from 'src/app/core/components/pagination/paginati
     CommonModule,
     MaterialModule,
     PaginationComponent,
+    DialogAboutComponent,
     LucideAngularModule.pick({
       File,
       Home,
@@ -50,9 +52,10 @@ import { PaginationComponent } from 'src/app/core/components/pagination/paginati
       SquarePower,
       SquareX,
       Pause,
+      Crown,
     }),
   ],
-  providers: [ApiService, StateService],
+  providers: [],
   exports: [
     HeaderComponent,
     FooterComponent,
@@ -61,6 +64,7 @@ import { PaginationComponent } from 'src/app/core/components/pagination/paginati
     MaterialModule,
     LucideAngularModule,
     PaginationComponent,
+    DialogAboutComponent,
   ],
 })
 export class CoreModule {}

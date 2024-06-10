@@ -2,6 +2,8 @@ import { RouteEnum } from 'src/app/shared/interfaces/enums';
 import { Router } from '@angular/router';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { DialogAboutComponent } from 'src/app/core/components/dialog-about/dialog-about.component';
+import { StateService } from 'src/app/core/services/api/state.service';
 
 @Component({
   selector: 'app-header',
@@ -9,13 +11,19 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {
-  constructor(public dialog: MatDialog, private router: Router) {}
+  constructor(
+    public dialog: MatDialog,
+    private router: Router,
+    private stateService: StateService
+  ) {}
 
-  openDialog() {}
+  openDialog() {
+    this.dialog.open(DialogAboutComponent);
+  }
 
   onGarage() {
     this.router.navigate([RouteEnum.garage], {
-      queryParams: { page: 1 },
+      queryParams: { page: this.stateService.garagePage.page },
     });
   }
   onWinners() {

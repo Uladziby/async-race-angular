@@ -3,7 +3,6 @@ export function getVisiblePages(
   currentPage: number
 ): number[] {
   const visiblePages = 5;
-
   let startPage: number, endPage: number;
 
   if (totalPages <= visiblePages) {

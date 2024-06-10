@@ -8,8 +8,11 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { StateService } from 'src/app/core/services/api/state.service';
+import { LIMIT_ITEMS } from 'src/app/shared/constants';
 import { getVisiblePages } from 'src/app/shared/functions/getVisiblePages';
-import { Car } from 'src/app/shared/interfaces/types';
+import { Car, PagerType } from 'src/app/shared/interfaces/types';
 
 @Component({
   selector: 'app-pagination',
@@ -20,20 +23,40 @@ import { Car } from 'src/app/shared/interfaces/types';
 })
 export class PaginationComponent implements OnInit, OnChanges {
   @Input() items!: Car[] | null;
-  @Input() itemsPerPage: number = 6;
+
   @Input() currentPage: number = 1;
+
   @Output() changePage = new EventEmitter<Car[]>();
 
-  pager: any = {
+  pager: PagerType = {
     startIndex: 0,
     endIndex: 0,
-    totalPages: 1,
+    totalItems: 1,
+    maxPages: 1,
   };
-
   visiblePages: number[] = [];
 
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private stateService: StateService
+  ) {
+    this.route.queryParamMap.subscribe((params) => {
+      const numberPage = params.get('page');
+      if (numberPage) this.currentPage = parseInt(numberPage);
+    });
+  }
+
   ngOnInit() {
-    this.setPage(this.currentPage);
+    this.stateService.currentGarage$.subscribe((data: Car[]) => {
+      this.pager.totalItems = data.length;
+
+      this.pager.maxPages = Math.ceil(data.length / LIMIT_ITEMS);
+
+      this.items = data;
+
+      this.setPage(this.currentPage);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -41,18 +64,32 @@ export class PaginationComponent implements OnInit, OnChanges {
 
     this.setPage(this.currentPage);
 
-    this.pager.totalPages = Math.ceil(items.length / this.itemsPerPage);
+    this.pager.totalItems = items.length;
 
     this.updateVisiblePages();
   }
 
   setPage(page: number) {
-    if (page >= 1 && page <= this.pager.totalPages) {
+    if (page >= 1 && page <= this.pager.maxPages) {
       this.currentPage = page;
-    }
 
-    this.pager.startIndex = (page - 1) * this.itemsPerPage;
-    this.pager.endIndex = this.pager.startIndex + this.itemsPerPage;
+      this.sortItems(page);
+
+      this.updateVisiblePages();
+
+      this.updateQueryParams();
+    }
+  }
+
+  updateVisiblePages() {
+    this.visiblePages = getVisiblePages(this.pager.maxPages, this.currentPage);
+    if (this.items)
+      this.pager.maxPages = Math.ceil(this.items.length / LIMIT_ITEMS);
+  }
+
+  sortItems(page: number) {
+    this.pager.startIndex = (page - 1) * LIMIT_ITEMS;
+    this.pager.endIndex = this.pager.startIndex + LIMIT_ITEMS;
 
     const pageOfItems = this.items!.slice(
       this.pager.startIndex,
@@ -60,14 +97,12 @@ export class PaginationComponent implements OnInit, OnChanges {
     );
 
     this.changePage.emit(pageOfItems);
-
-    this.updateVisiblePages();
   }
 
-  updateVisiblePages() {
-    this.visiblePages = getVisiblePages(
-      this.pager.totalPages,
-      this.currentPage
-    );
+  updateQueryParams() {
+    this.router.navigate([], {
+      queryParams: { page: this.currentPage },
+      queryParamsHandling: 'merge',
+    });
   }
 }

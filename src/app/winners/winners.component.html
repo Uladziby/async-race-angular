@@ -25,26 +25,26 @@
       </tr>
     </thead>
     <tbody class="bg-white">
-      <tr *ngFor="let racer of paginatedRacers" class="hover:bg-gray-100">
+      <tr *ngFor="let winner of winners$ | async" class="hover:bg-gray-100">
         <td
           class="px-6 py-4 border-b border-gray-300 text-sm leading-5 text-gray-800"
         >
-          {{ racer.number }}
+          {{ winner.number }}
         </td>
         <td
           class="px-6 py-4 border-b border-gray-300 text-sm leading-5 text-gray-800"
         >
-          {{ racer.name }}
+          {{ winner.name }}
         </td>
         <td
           class="px-6 py-4 border-b border-gray-300 text-sm leading-5 text-gray-800"
         >
-          {{ racer.bestTime }}
+          {{ winner.bestTime }}
         </td>
         <td
           class="px-6 py-4 border-b border-gray-300 text-sm leading-5 text-gray-800"
         >
-          {{ racer.wins }}
+          {{ winner.wins }}
         </td>
       </tr>
     </tbody>

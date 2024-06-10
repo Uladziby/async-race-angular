@@ -18,8 +18,18 @@ export class ButtonComponent {
   @Input() label: string = '';
   @Output() onClick = new EventEmitter<any>();
 
+  @Input() public set disabled(state: string | undefined) {
+    if (state !== undefined) {
+      this._disabled = true;
+    }
+  }
+  public get disabled(): string {
+    return this._disabled ? 'true' : '';
+  }
+
+  private _disabled = false;
+
   onClickButton(event: Event) {
-    console.log('click', event);
     this.onClick.emit(event);
   }
 

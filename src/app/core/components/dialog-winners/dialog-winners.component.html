@@ -1,0 +1,14 @@
+<div
+  class="container mx-auto p-10 flex justify-center align-middle flex-col gap-10"
+>
+  <div class="flex gap-4">
+    <lucide-icon name="crown" size="50" color="yellow"></lucide-icon>
+    <h2 class="text-4xl text-center">Winner</h2>
+  </div>
+  <ul class="list-none p-0">
+    <li *ngFor="let winner of winners" class="py-2 border-b">
+      <span class="font-semibold text-3xl">{{ winner.name }}</span> -
+      <span class="text-gray-600 text-3xl">{{ winner.time }}</span>
+    </li>
+  </ul>
+</div>

@@ -1,19 +1,19 @@
 <div class="w-full flex flex-col">
   <app-control-panel
     [carsList$]="carsList$"
+    [pageOfItems]="pageOfItems"
     (onStartEngines)="onStartEngines($event)"
+    (onResetCars)="onResetCars()"
   ></app-control-panel>
-  <ng-container *ngIf="carsList$ | async">
-    <ul class="flex flex-col gap-10 border-b-4 border-indigo-500">
-      <li>
-        <app-garage-car
-          (removedCarId)="onRemoveCar($event)"
-          *ngFor="let car of pageOfItems"
-          [car]="car"
-        ></app-garage-car>
-      </li>
-    </ul>
-  </ng-container>
+  <ul class="flex flex-col gap-10 border-b-4 border-indigo-500">
+    <li>
+      <app-garage-car
+        (removedCarId)="onRemoveCar($event)"
+        *ngFor="let car of specificCarsPage$ | async; let i = index"
+        [car]="car"
+      ></app-garage-car>
+    </li>
+  </ul>
   <app-pagination
     [items]="carsList$.value"
     (changePage)="onChangePage($event)"

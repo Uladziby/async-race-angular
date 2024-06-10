@@ -6,6 +6,7 @@ import appConfig from 'src/app/app.config';
 import { CoreModule } from 'src/app/core/core.module';
 import { GarageModule } from 'src/app/garage/garage.module';
 import { MaterialModule } from 'src/app/material/material.module';
+import { StateService } from 'src/app/core/services/api/state.service';
 
 @Component({
   selector: 'app-root',
@@ -23,5 +24,9 @@ import { MaterialModule } from 'src/app/material/material.module';
   ],
 })
 export class AppComponent {
-  title = 'async-race-angular';
+  title = 'A-Race';
+  constructor(
+    @Inject('AppConfig') private appConfig: any,
+    public stateService: StateService
+  ) {}
 }

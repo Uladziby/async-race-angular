@@ -1,24 +1,29 @@
-<div class="flex justify-center mt-4">
-  <button
-    (click)="setPage(currentPage - 1)"
-    [disabled]="currentPage === 1"
-    class="mx-2 px-3 py-1 bg-gray-200 text-gray-600 rounded disabled:opacity-50"
-  >
-    Previous
-  </button>
-  <button
-    *ngFor="let page of visiblePages"
-    (click)="setPage(page)"
-    [class.bg-gray-300]="currentPage === page"
-    class="mx-2 px-3 py-1 bg-gray-200 text-gray-600 rounded"
-  >
-    {{ page }}
-  </button>
-  <button
-    (click)="setPage(currentPage + 1)"
-    [disabled]="currentPage === pager.totalPages"
-    class="mx-2 px-3 py-1 bg-gray-200 text-gray-600 rounded disabled:opacity-50"
-  >
-    Next
-  </button>
+<div class="flex justify-evenly mt-4">
+  <div class="flex justify-between">
+    <button
+      (click)="setPage(currentPage - 1)"
+      [disabled]="currentPage === 1"
+      class="mx-2 px-3 py-1 bg-gray-200 text-gray-600 rounded disabled:opacity-50"
+    >
+      Previous
+    </button>
+    <button
+      *ngFor="let page of visiblePages"
+      (click)="setPage(page)"
+      [class.bg-gray-300]="currentPage === page"
+      class="mx-2 px-3 py-1 bg-gray-200 text-gray-600 rounded"
+    >
+      {{ page }}
+    </button>
+    <button
+      (click)="setPage(currentPage + 1)"
+      [disabled]="currentPage === pager.maxPages"
+      class="mx-2 px-3 py-1 bg-gray-200 text-gray-600 rounded disabled:opacity-50"
+    >
+      Next
+    </button>
+  </div>
+  <div class="items-center" *ngIf="items">
+    Total cars : {{ pager.totalItems }}
+  </div>
 </div>
