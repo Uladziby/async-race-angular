@@ -1,0 +1,24 @@
+<div class="w-full flex flex-col">
+  <app-control-panel
+    [carsList$]="carsList$"
+    [pageOfItems]="pageOfItems"
+    (onStartEngines)="onStartEngines($event)"
+    (onResetCars)="onResetCars()"
+  ></app-control-panel>
+  <ul class="flex flex-col gap-10 border-b-4 border-indigo-500">
+    <li>
+      <app-garage-car
+        (removedCarId)="onRemoveCar($event)"
+        *ngFor="
+          let car of stateService.specificCarsPage$ | async;
+          let i = index
+        "
+        [car]="car"
+      ></app-garage-car>
+    </li>
+  </ul>
+  <app-pagination
+    [items]="carsList$.value"
+    (changePage)="onChangePage($event)"
+  ></app-pagination>
+</div>
