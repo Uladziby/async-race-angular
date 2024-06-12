@@ -5,13 +5,14 @@
       type="flat"
       size="large"
       (click)="onRace()"
+      [disabled]="!isReset"
     >
       <div class="flex items-center gap-4">
         <span>Race</span>
         <lucide-icon name="play" size="22" color="black"></lucide-icon>
       </div>
     </app-material-button>
-    <app-button (click)="onReset()">
+    <app-button (click)="onReset()" [disabled]="isReset">
       <div class="flex items-center gap-4">
         <span>Restart</span>
         <lucide-icon name="rotate-ccw" size="22" color="black"></lucide-icon>
@@ -30,8 +31,12 @@
       [style.background]="color"
       class="w-8 rounded-2xl"
     />
-    <app-button (click)="onCreateCar()" class="whitespace-nowrap">
-      Add a new car
+    <app-button
+      (click)="onCreateCar()"
+      class="whitespace-nowrap btn-control-panel"
+    >
+      <lucide-icon name="car-front"></lucide-icon>
+      <span class="px-2">Create</span>
     </app-button>
   </div>
   <div class="flex items-center gap-2 border-x-4 border-indigo-500 px-4">
@@ -46,17 +51,22 @@
       [style.background]="updateColor"
       class="w-8 rounded-2xl"
     />
-    <app-button (click)="onUpdateCar()"> Update </app-button>
+    <app-button (click)="onUpdateCar()" class="btn-control-panel">
+      <lucide-icon name="pencil-line"></lucide-icon>
+      <span class="px-2">Update</span>
+    </app-button>
   </div>
   <div class="flex items-center gap-2 border-x-4 border-indigo-500 px-4">
     <app-button
+      class="btn-control-panel"
       color="primary"
       type="flat"
       size="large"
-      [disabled]="carsList$.value.length > 100 ? 'disabled' : undefined"
+      [disabled]="isDisabledGenerateCars$ | async"
       (click)="onGenerateCars()"
     >
-      Generate cars
+      <lucide-icon name="zap"></lucide-icon>
+      <span class="px-2"> Generate cars </span>
     </app-button>
   </div>
 </div>

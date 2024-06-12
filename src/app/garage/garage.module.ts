@@ -9,6 +9,7 @@ import { StateService } from 'src/app/core/services/api/state.service';
 import { ApiService } from 'src/app/core/services/api/api.service';
 import { GarageRoutingModule } from 'src/app/garage/garage-routing.module';
 import { RouterModule } from '@angular/router';
+import { DialogTimerComponent } from 'src/app/core/components/dialog-timer/dialog-timer.component';
 
 @NgModule({
   declarations: [GarageComponent, CarComponent],
@@ -18,6 +19,7 @@ import { RouterModule } from '@angular/router';
     ControlPanelComponent,
     RaceDirective,
     GarageRoutingModule,
+    DialogTimerComponent,
   ],
   providers: [StateService],
   exports: [CarComponent, ControlPanelComponent],

@@ -1,23 +1,14 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import {
   BehaviorSubject,
   Observable,
-  Subscription,
   catchError,
-  combineLatest,
   forkJoin,
   map,
-  merge,
   of,
-  skip,
+  switchMap,
   take,
 } from 'rxjs';
 import { DialogWinnersComponent } from 'src/app/core/components/dialog-winners/dialog-winners.component';
@@ -32,40 +23,34 @@ import {
 import {
   Car,
   CarOptionsType,
-  CarsVelocityType,
   ResponseWinnersType,
   WinnersType,
 } from 'src/app/shared/interfaces/types';
+import { defineBestVelocity } from 'src/app/shared/utils/defineBestVelocity';
 
 @Component({
   selector: 'app-garage',
   templateUrl: './garage.component.html',
   styleUrl: './garage.component.scss',
 })
-export class GarageComponent implements OnInit, OnDestroy {
+export class GarageComponent implements OnInit {
   @ViewChild(CarComponent) child!: CarComponent;
-
-  private subscribe!: Subscription;
 
   carsList$ = new BehaviorSubject<Car[]>([]);
 
-  specificCarsPage$ = new BehaviorSubject<Car[]>([]);
+  transformedWinnersData$ = new BehaviorSubject<WinnersType[]>([]);
+
+  carOptions$ = this.stateService.currentCarsOptions$;
 
   bestVelocity: number = 0;
 
   initialValueLeft: string = '10px';
 
-  currentCarsVelocity: CarsVelocityType[] = [];
-
   pageOfItems: Car[] = [];
 
-  transformedWinnersData$ = new BehaviorSubject<WinnersType[]>([]);
-
-  carOptions$ = new BehaviorSubject<CarOptionsType[]>([]);
-
   constructor(
+    public stateService: StateService,
     private apiService: ApiService,
-    private stateService: StateService,
     private cdr: ChangeDetectorRef,
     private dialog: MatDialog,
     private route: ActivatedRoute
@@ -78,37 +63,22 @@ export class GarageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.stateService.init();
-
-    this.subscribe = combineLatest([
-      this.stateService.specificCarsPage$,
-      this.stateService.currentCarsOptions$,
-      this.stateService.currentCarsVelocity$,
-    ]).subscribe(
-      ([specificCarsPage, currentCarsOptions, currentCarsVelocity]) => {
-        this.specificCarsPage$.next(specificCarsPage);
-
-        this.carOptions$.next(currentCarsOptions);
-
-        this.currentCarsVelocity = currentCarsVelocity;
-      }
-    );
   }
 
   onRemoveCar(id: number) {
-    this.apiService.deleteCar(id).subscribe(() => {
-      this.apiService.getCars({}).subscribe((data: Car[]) => {
-        this.carsList$.next(data);
-        this.cdr.detectChanges();
+    this.apiService
+      .deleteCar(id)
+      .pipe(switchMap(() => this.apiService.getCars({})))
+      .subscribe({
+        next: (data: Car[]) => {
+          this.carsList$.next(data);
+          this.cdr.detectChanges();
+        },
       });
-    });
-  }
-
-  ngOnDestroy() {
-    this.subscribe.unsubscribe();
   }
 
   onChangePage(items: Car[]) {
-    this.specificCarsPage$.next(items);
+    this.stateService.setSpecificCarsPage(items);
   }
 
   onStartEngines(data: CarOptionsType[]) {
@@ -118,31 +88,21 @@ export class GarageComponent implements OnInit, OnDestroy {
           const optionsWithIsDriveMode = carOptions.filter(
             (obj) => obj.isDriveMode
           );
-          return Math.max(...optionsWithIsDriveMode.map((obj) => obj.velocity));
-        })
-      )
-      .pipe(
-        map((bestVelocity) => {
-          this.bestVelocity = bestVelocity;
+          this.bestVelocity = defineBestVelocity(optionsWithIsDriveMode);
 
-          return this.carOptions$.value.filter(
-            (obj) => obj.velocity === bestVelocity
-          );
+          return carOptions
+            .filter((obj) => obj.velocity === this.bestVelocity)
+            .map((winner) => {
+              return {
+                id: winner.id,
+                wins: 1,
+                time: calculateWinnerTime(winner.velocity),
+              };
+            });
         })
       )
-      .pipe(
-        map((data) => {
-          return data.map((winner) => {
-            return {
-              id: winner.id,
-              wins: 1,
-              time: calculateWinnerTime(winner.velocity),
-            };
-          });
-        })
-      )
-      .subscribe((data) => {
-        this.transformedWinnersData$.next(data);
+      .subscribe((winners: WinnersType[]) => {
+        this.transformedWinnersData$.next(winners);
       });
 
     const requests = this.transformedWinnersData$.value.map((winner) => {
@@ -157,19 +117,25 @@ export class GarageComponent implements OnInit, OnDestroy {
               wins: wins + 1,
               time: time < parsedTime ? time : parsedTime,
             };
-            this.apiService.updateWinner(updatedWinner);
+
+            this.apiService.updateWinner(updatedWinner).subscribe((data) => {
+              console.log('updatedWinner', data);
+            });
+
             return updatedWinner as ResponseWinnersType;
           })
         )
         .pipe(
           catchError(() => {
-            const newWinner = {
+            let newWinner = {
               id: winner.id,
               wins: 1,
               time: parsedTime,
             };
 
-            this.apiService.createWinner(newWinner).subscribe((data) => {});
+            this.apiService.createWinner(newWinner).subscribe((data) => {
+              newWinner = data;
+            });
 
             return of(newWinner) as Observable<ResponseWinnersType>;
           })
@@ -179,31 +145,44 @@ export class GarageComponent implements OnInit, OnDestroy {
     forkJoin(requests).subscribe((data) => {
       this.stateService.updateWinners(data);
 
-      const delay = DISTANCE / this.bestVelocity;
-
-      setTimeout(() => {
-        this.dialog.open(DialogWinnersComponent, { data: { winners: data } });
-      }, delay);
+      this.openWinnerDialog(data);
     });
   }
 
+  openWinnerDialog(data: ResponseWinnersType[]) {
+    const delay = DISTANCE / this.bestVelocity + 1000;
+
+    setTimeout(() => {
+      this.dialog.open(DialogWinnersComponent, { data: { winners: data } });
+    }, delay);
+  }
+
   onResetCars() {
-    const initialCarsOptions: CarOptionsType[] = this.pageOfItems.map((car) => {
-      return {
-        isDriveMode: false,
-        isEngineStarted: false,
-        velocity: 0,
-        distance: 0,
-        id: car.id,
-      };
-    });
+    this.carOptions$
+      .pipe(
+        take(1),
+        switchMap((carOptions: CarOptionsType[]) => {
+          const requests = carOptions.map(({ id }) =>
+            this.apiService.stopEngine(id).pipe(
+              map(() => {
+                return {
+                  isDriveMode: false,
+                  isEngineStarted: false,
+                  velocity: 0,
+                  distance: 0,
+                  id: id,
+                };
+              })
+            )
+          );
 
-    const requests = this.pageOfItems.map(({ id }) =>
-      this.apiService.stopEngine(id)
-    );
-
-    forkJoin(requests).subscribe(() => {
-      this.stateService.setCarsOptions(initialCarsOptions);
-    });
+          return forkJoin(requests);
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          this.stateService.setCarsOptions(data);
+        },
+      });
   }
 }

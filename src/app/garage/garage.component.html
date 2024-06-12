@@ -9,7 +9,10 @@
     <li>
       <app-garage-car
         (removedCarId)="onRemoveCar($event)"
-        *ngFor="let car of specificCarsPage$ | async; let i = index"
+        *ngFor="
+          let car of stateService.specificCarsPage$ | async;
+          let i = index
+        "
         [car]="car"
       ></app-garage-car>
     </li>

@@ -4,21 +4,17 @@ import {
   CarsVelocityType,
 } from './../../../shared/interfaces/types';
 import {
-  ApplicationRef,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
   HostListener,
   Input,
-  OnChanges,
   OnInit,
   Output,
-  SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { BehaviorSubject, Subscription, filter, map, tap } from 'rxjs';
+import { Subscription, map } from 'rxjs';
 import { ApiService } from 'src/app/core/services/api/api.service';
 import { StateService } from 'src/app/core/services/api/state.service';
 
@@ -119,65 +115,38 @@ export class CarComponent implements OnInit {
       200;
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    // console.log(changes, 'changes');
-  }
-
   onStartEngine() {
-    console.log('onStartEngine', this.car.id);
-
     if (!this.containerRaceField) return;
 
-    this.apiService.startEngine(this.car.id).subscribe(() => {
+    this.apiService.startEngine(this.car.id).subscribe((data) => {
+      console.log(data);
       this.isEngineStarted = 'primary';
+      this.velocity = data.velocity;
+
+      this.containerCar!.nativeElement.style.transitionDuration = `${(
+        data.distance /
+        (this.velocity! * 1000)
+      ).toFixed(2)}s`;
+
+      this.left = `${this.roadDistance}px`;
     });
   }
 
-  onStopEngine(event?: MouseEvent) {
+  onStopEngine() {
     const car = this.containerCar!.nativeElement;
 
+    car.style.transitionDuration = this.initialTransitionDuration;
     car.style.left = this.initialValueLeft;
 
     this.apiService.stopEngine(this.car.id).subscribe(() => {
       car.style.transitionDuration = '0s';
+      this.left = this.initialValueLeft;
       this.isEngineStarted = 'secondary';
     });
   }
 
   onRemoveCar() {
     this.removedCarId.emit(this.car.id);
-  }
-
-  onDriveMode() {
-    console.log('onDriveMode');
-
-    const id = this.car.id;
-
-    this.stateService.currentCarsVelocity$.subscribe((data) => {});
-
-    this.stateService.currentCarsVelocity$
-      .pipe(
-        map((carsVelocity) => {
-          console.log(carsVelocity, 'carsVelocity'),
-            carsVelocity.filter((item) => item.id === id);
-        })
-      )
-      .subscribe((data) => {
-        console.log(data, 'data state service');
-      });
-
-    this.apiService.switchDriveMode(this.car.id).subscribe((data) => {
-      this.roadDistance =
-        this.containerRaceField!.nativeElement.clientWidth -
-        this.containerCar!.nativeElement.clientWidth * 2;
-
-      if (data.success) {
-        console.log('drive mode');
-        setTimeout(() => {
-          this.left = `${this.roadDistance}px`;
-        }, 1000);
-      }
-    });
   }
 
   ngOnDestroy() {

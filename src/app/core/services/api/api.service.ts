@@ -60,8 +60,11 @@ export class ApiService {
     );
   }
 
-  stopEngine(id: number) {
-    return this.http.patch(`${this.engine}?id=${id}&status=stopped`, {});
+  stopEngine(id: number): Observable<{ velocity: number; distance: number }> {
+    return this.http.patch<{ velocity: number; distance: number }>(
+      `${this.engine}?id=${id}&status=stopped`,
+      {}
+    );
   }
 
   switchDriveMode(id: number): Observable<ResponseSwitchDriveMode> {

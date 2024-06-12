@@ -1,10 +1,10 @@
 import { CommonModule, NgFor } from '@angular/common';
 import { Component } from '@angular/core';
-import { BehaviorSubject, map, tap } from 'rxjs';
+import { BehaviorSubject, Subscription, map, tap } from 'rxjs';
 import { CoreModule } from 'src/app/core/core.module';
 import { ApiService } from 'src/app/core/services/api/api.service';
 import { StateService } from 'src/app/core/services/api/state.service';
-import { Car, WinnersUpdatedType } from 'src/app/shared/interfaces/types';
+import { Car, WinnersTableType } from 'src/app/shared/interfaces/types';
 
 @Component({
   selector: 'app-winners',
@@ -17,37 +17,58 @@ import { Car, WinnersUpdatedType } from 'src/app/shared/interfaces/types';
 export class WinnersComponent {
   carsList$ = new BehaviorSubject<Car[]>([]);
 
-  winners$ = new BehaviorSubject<WinnersUpdatedType[]>([]);
+  winners$ = new BehaviorSubject<WinnersTableType[]>([]);
 
   garage: Car[] = [];
 
+  sortOrderByTime: string = 'asc';
+
+  bestTime: string = 'bestTime';
+
+  wins: string = 'wins';
+
+  sortOrderByWins: string = 'asc';
+
+  subs: Subscription = new Subscription();
   constructor(private stateService: StateService) {}
 
   ngOnInit() {
-    this.stateService.init();
+    this.subs.add(this.stateService.init());
 
-    this.stateService.currentGarage$.subscribe((data: Car[]) => {
-      this.carsList$.next(data);
-      this.stateService.currentWinners$
-        .pipe(
-          map((winners) =>
-            winners.map((winner, index) => {
-              const car = this.carsList$.value.find(
-                (car) => car.id === winner.id
-              );
-              return {
-                number: index + 1,
-                name: car?.name,
-                bestTime: winner.time as unknown as string,
-                wins: winner.wins,
-              };
-            })
+    this.subs.add(
+      this.stateService.currentGarage$.subscribe((data: Car[]) => {
+        this.carsList$.next(data);
+        this.stateService.currentWinners$
+          .pipe(
+            map((winners) =>
+              winners.map((winner, index) => {
+                const car = this.carsList$.value.find(
+                  (car) => car.id === winner.id
+                );
+                return {
+                  number: index + 1,
+                  name: car?.name,
+                  bestTime: winner.time,
+                  wins: winner.wins,
+                };
+              })
+            )
           )
-        )
-        .subscribe((data) => {
-          this.winners$.next(data);
-          this.stateService.currentWinners$.subscribe((data) => {});
-        });
-    });
+          .subscribe((data: WinnersTableType[]) => {
+            this.winners$.next(data);
+          });
+      })
+    );
+  }
+
+  sortByTime() {
+    this.sortOrderByTime = this.sortOrderByTime === 'ASC' ? 'DESC' : 'ASC';
+  }
+  sortByWins() {
+    this.sortOrderByWins = this.sortOrderByWins === 'ASC' ? 'DESC' : 'ASC';
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
   }
 }

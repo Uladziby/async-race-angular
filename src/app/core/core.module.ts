@@ -19,12 +19,15 @@ import {
   SquareX,
   Pause,
   Crown,
+  PencilLine,
+  CarFront,
+  Zap,
 } from 'lucide-angular';
 import { MaterialModule } from 'src/app/material/material.module';
 import { ButtonComponent } from 'src/app/core/components/button/button.component';
-
 import { PaginationComponent } from 'src/app/core/components/pagination/pagination.component';
 import { DialogAboutComponent } from 'src/app/core/components/dialog-about/dialog-about.component';
+import { SortPipe } from 'src/app/core/pipes/sort-pipe.pipe';
 
 @NgModule({
   declarations: [
@@ -32,6 +35,7 @@ import { DialogAboutComponent } from 'src/app/core/components/dialog-about/dialo
     FooterComponent,
     MaterialButtonComponent,
     ButtonComponent,
+    SortPipe,
   ],
   imports: [
     CommonModule,
@@ -53,6 +57,9 @@ import { DialogAboutComponent } from 'src/app/core/components/dialog-about/dialo
       SquareX,
       Pause,
       Crown,
+      PencilLine,
+      CarFront,
+      Zap,
     }),
   ],
   providers: [],
@@ -65,6 +72,7 @@ import { DialogAboutComponent } from 'src/app/core/components/dialog-about/dialo
     LucideAngularModule,
     PaginationComponent,
     DialogAboutComponent,
+    SortPipe,
   ],
 })
 export class CoreModule {}

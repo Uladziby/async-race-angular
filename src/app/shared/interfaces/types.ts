@@ -52,10 +52,10 @@ export type WinnersType = {
   time: string;
 };
 
-export type WinnersUpdatedType = {
+export type WinnersTableType = {
   number: number;
   name: string | FormControl<string> | undefined;
-  bestTime: string;
+  bestTime: number;
   wins: number;
 };
 

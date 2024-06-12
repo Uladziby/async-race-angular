@@ -19,12 +19,11 @@ export const parseWinnerTimeToNumber = (time: string) => {
 };
 
 export const parseTimeToString = (time: number) => {
-  console.log(time, 'time');
   return `${time.toFixed(2)}s`;
 };
 
 export const aboutMe = new Map<string, string>([
   ['Github', 'https://github.com/uladziby'],
   ['Mail', 'yanushevskyv@gmail.com'],
-  ['Task Repo', 'https://github.com/uladziby'],
+  ['Task Repo', 'https://github.com/Uladziby/async-race-angular'],
 ]);

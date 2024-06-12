@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
-import { map, switchMap, take } from 'rxjs/operators';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ApiService } from 'src/app/core/services/api/api.service';
 import { LIMIT_ITEMS } from 'src/app/shared/constants';
 
@@ -39,7 +39,7 @@ export class StateService {
   currentWinners$ = this.winners.asObservable();
 
   garagePage: GaragePageType = {
-    page: 2,
+    page: 1,
     limit: LIMIT_ITEMS,
     isRace: false,
     currentRace: 1,
@@ -50,20 +50,26 @@ export class StateService {
     endIndex: LIMIT_ITEMS,
   };
 
+  subs!: Subscription;
+
   constructor(private apiService: ApiService, private route: ActivatedRoute) {
     this.route.queryParamMap.subscribe((params) => {
       const numberPage = params.get('page');
+
       if (!numberPage) return;
+
       this.garagePage.page = parseInt(numberPage);
+
       this.garagePageOptions.endIndex = this.garagePage.page * LIMIT_ITEMS;
+
       this.garagePageOptions.startIndex =
         (this.garagePage.page - 1) * LIMIT_ITEMS;
     });
   }
 
   init() {
-    this.apiService.getCars(this.garagePage).subscribe((data) => {
-      this.setCars(data);
+    this.subs = this.apiService.getCars(this.garagePage).subscribe((data) => {
+      this.garage.next(data);
     });
 
     this.apiService
@@ -98,10 +104,6 @@ export class StateService {
     this.garage.next([...this.garage.value, car]);
   }
 
-  setCars(cars: Car[]) {
-    this.garage.next(cars);
-  }
-
   setCarsVelocity(carsVelocity: CarsVelocityType[]) {
     if (carsVelocity.length === 0) return;
     this.carsVelocity.next(carsVelocity);
@@ -120,5 +122,9 @@ export class StateService {
   }
   updateWinners(winners: ResponseWinnersType[]) {
     this.winners.next([...this.winners.value, ...winners]);
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
   }
 }

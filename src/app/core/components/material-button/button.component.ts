@@ -11,14 +11,15 @@ export class MaterialButtonComponent {
   @Input() public color: string = Colors.PRIMARY;
   @Input() public type: string = ButtonTypes.FLAT;
   @Input() public size: string = Sizes.LARGE;
-  @Input() public set disabled(state: string) {
-    if (state !== undefined) {
-      this._disabled = true;
+  @Input() public set disabled(state: boolean | null) {
+    if (state === null) {
+      return;
     }
+    this._disabled = state;
   }
 
-  public get disabled(): string {
-    return this._disabled ? 'true' : '';
+  public get disabled(): boolean {
+    return this._disabled;
   }
 
   private _disabled = false;

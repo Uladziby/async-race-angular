@@ -7,6 +7,7 @@
         ></app-button>
         <span class="">{{ car.name }}</span>
       </div>
+      <span class="text-center self-center"> {{ velocity }} km/h </span>
       <div class="flex flex-col justify-center items-center flex-1">
         <app-material-button
           [color]="isEngineStarted"
@@ -40,6 +41,3 @@
     </div>
   </div>
 </div>
-<pre>
-  {{ velocity }} km/h
-</pre>
